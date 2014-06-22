@@ -33,6 +33,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new BlockBreak(), this);
+		pm.registerEvents(new EntityExplode(), this);
 		pm.registerEvents(new InventoryClose(), this);
 		pm.registerEvents(this, this);
 		
