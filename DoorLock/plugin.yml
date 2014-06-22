@@ -1,0 +1,9 @@
+name: DoorLock
+main: me.IvanMazzoli.DoorLock.Main
+version: 1.0
+author: IvanMazzoli
+description: Lock your doors with a password made of items!
+
+commands:
+  doorlock:
+    description: DoorLock commands list
