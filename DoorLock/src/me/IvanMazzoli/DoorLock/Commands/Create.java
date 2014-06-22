@@ -29,6 +29,7 @@ public class Create extends DoorLockCommand {
 
 		Block block = player.getTargetBlock(null, 5);
 
+		// First we check if the player is watching a dropper
 		if (!block.getType().equals(Material.DROPPER)) {
 			player.sendMessage(ChatColor.RED
 					+ "You must watch a dropper to create a lock!");
@@ -40,6 +41,8 @@ public class Create extends DoorLockCommand {
 
 		boolean isEmpty = true;
 
+		// Then we check if the player as already set a password
+		// If not, let's send him a message and inform him
 		for (ItemStack content : inventory.getContents())
 			if (content != null)
 				isEmpty = false;
@@ -50,23 +53,27 @@ public class Create extends DoorLockCommand {
 			return;
 		}
 
+		// We must check if it is already a Lock
 		if (WorldUtils.isLock(dropper.getLocation())) {
 			player.sendMessage(ChatColor.RED
 					+ "This dropper is already a lock!");
 			return;
 		}
 
+		// We create a lock and add it to known locks
 		Lock lock = new Lock(dropper.getLocation(), dropper.getInventory()
 				.getContents(), player.getUniqueId());
 
 		WorldUtils.lockList.add(lock);
 
+		// Then we save it in a .yml file
 		try {
 			YamlUtils.save(lock);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+		// And finally we shuffle the content of the dropper
 		ItemStack[] content = dropper.getInventory().getContents();
 		Collections.shuffle(Arrays.asList(content));
 		dropper.getInventory().setContents(content);
