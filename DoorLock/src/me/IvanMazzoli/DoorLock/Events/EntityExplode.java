@@ -24,7 +24,7 @@ public class EntityExplode implements Listener {
 		// Then we create a list of blocks to not being destroyed
 		List<Block> noDestroy = new ArrayList<Block>();
 
-		// For every block involved in the explosion we che if
+		// For every block involved in the explosion we check if
 		// It is a dropper and if it is a lock
 		// If so, we add to the noDestroy list
 		while (inExplosion.hasNext()) {
