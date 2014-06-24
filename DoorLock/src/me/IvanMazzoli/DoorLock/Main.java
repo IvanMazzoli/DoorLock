@@ -3,6 +3,7 @@ package me.IvanMazzoli.DoorLock;
 import java.util.logging.Logger;
 
 import me.IvanMazzoli.DoorLock.Events.BlockBreak;
+import me.IvanMazzoli.DoorLock.Events.BlockDispense;
 import me.IvanMazzoli.DoorLock.Events.EntityExplode;
 import me.IvanMazzoli.DoorLock.Events.InventoryClick;
 import me.IvanMazzoli.DoorLock.Events.InventoryClose;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new BlockBreak(), this);
+		pm.registerEvents(new BlockDispense(), this);
 		pm.registerEvents(new EntityExplode(), this);
 		pm.registerEvents(new InventoryClick(), this);
 		pm.registerEvents(new InventoryClose(), this);
