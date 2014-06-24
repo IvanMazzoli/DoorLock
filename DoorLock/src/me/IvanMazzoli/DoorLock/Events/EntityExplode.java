@@ -1,4 +1,4 @@
-package me.IvanMazzoli.DoorLock;
+package me.IvanMazzoli.DoorLock.Events;
 
 import java.util.ArrayList;
 import java.util.Iterator;

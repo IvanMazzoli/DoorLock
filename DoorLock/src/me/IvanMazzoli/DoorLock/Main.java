@@ -3,6 +3,7 @@ package me.IvanMazzoli.DoorLock;
 import java.util.logging.Logger;
 
 import me.IvanMazzoli.DoorLock.Events.BlockBreak;
+import me.IvanMazzoli.DoorLock.Events.EntityExplode;
 import me.IvanMazzoli.DoorLock.Events.InventoryClose;
 import me.IvanMazzoli.DoorLock.Util.YamlUtils;
 
