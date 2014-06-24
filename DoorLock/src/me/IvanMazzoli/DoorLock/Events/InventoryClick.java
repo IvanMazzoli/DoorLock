@@ -24,6 +24,11 @@ public class InventoryClick implements Listener {
 		// We check if the dropper is a lock
 		if (!WorldUtils.isLock(dropper.getLocation()))
 			return;
+		
+		// Then we check if the slot clicked is a forbidden one
+		// (every raw slot greater than 8 belongs to player inventory)
+		if (event.getRawSlot() >= 9)
+			event.setCancelled(true);
 
 		// Finally we have some actions that are forbidden because they
 		// Can remove/add items to the lock
