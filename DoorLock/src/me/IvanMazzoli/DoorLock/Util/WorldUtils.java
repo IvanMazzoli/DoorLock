@@ -1,6 +1,7 @@
 package me.IvanMazzoli.DoorLock.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import me.IvanMazzoli.DoorLock.Lock;
 
@@ -8,11 +9,13 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 public class WorldUtils {
-	
+
 	public static ArrayList<Lock> lockList = new ArrayList<Lock>();
-	
+	public static HashMap<Player, Lock> justUsedLock = new HashMap<Player, Lock>();
+
 	public static boolean isLock(Location location) {
 		for (Lock lock : lockList) {
 			if (lock.getLocation().equals(location))

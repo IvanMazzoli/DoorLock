@@ -11,6 +11,7 @@ import me.IvanMazzoli.DoorLock.Util.YamlUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Dropper;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -23,6 +24,7 @@ public class InventoryClose implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 
+		final Player player = (Player) event.getPlayer();
 		Inventory inventory = event.getInventory();
 
 		// First we must check if the InventoryType is a Dropper one
@@ -37,10 +39,23 @@ public class InventoryClose implements Listener {
 		if (!WorldUtils.isLock(location))
 			return;
 
-		// Now let's load the configuration file for this lock...
-		Lock lock = YamlUtils.load(location);
+		// Now let's load the configuration file for this lock
+		final Lock lock = YamlUtils.load(location);
+		
+		// We can add the player and the lock to the
+		// justUsedLock HashMap, we do this to check if the player
+		// Has dropped something closing the inventory (we check this
+		// In the ItemSpawn class) and remove him 30 ticks later
+		WorldUtils.justUsedLock.put(player, lock);
+		
+		Bukkit.getScheduler().runTaskLater(Main.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				WorldUtils.justUsedLock.remove(player);
+			}
+		}, 30);
 
-		// ...and be sure that the pattern it's the same
+		// And be sure that the pattern it's the same
 		if (!Arrays.equals(lock.getContent(), inventory.getContents()))
 			return;
 
