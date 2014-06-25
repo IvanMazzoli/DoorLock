@@ -77,9 +77,6 @@ public class YamlUtils {
 
 	private static Location expandLocation(String world, String coords) {
 		String[] param = coords.split("_");
-		Main.log.info(param[0]);
-		Main.log.info(param[1]);
-		Main.log.info(param[2]);
 		return new Location(Bukkit.getWorld(world), Double.valueOf(param[0]),
 				Double.valueOf(param[1]), Double.valueOf(param[2]));
 	}
