@@ -7,6 +7,7 @@ import me.IvanMazzoli.DoorLock.Commands.ChangePassword;
 import me.IvanMazzoli.DoorLock.Commands.Create;
 import me.IvanMazzoli.DoorLock.Commands.Delete;
 import me.IvanMazzoli.DoorLock.Commands.DoorLockCommand;
+import me.IvanMazzoli.DoorLock.Commands.GetOwner;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,9 +22,10 @@ public class CommandManager implements CommandExecutor {
 
 	public void setup() {
 		log = Main.log;
-		commands.add(new Create());
 		commands.add(new ChangePassword());
+		commands.add(new Create());
 		commands.add(new Delete());
+		commands.add(new GetOwner());
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd,

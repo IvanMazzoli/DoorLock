@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public abstract class DoorLockCommand {
 
-	public abstract void onCommand(Player p, String[] args);
+	public abstract void onCommand(Player player, String[] args);
 
 	private String description;
 
