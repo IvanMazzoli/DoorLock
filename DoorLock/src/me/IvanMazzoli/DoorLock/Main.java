@@ -1,5 +1,6 @@
 package me.IvanMazzoli.DoorLock;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import me.IvanMazzoli.DoorLock.Events.BlockBreak;
@@ -19,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -32,6 +34,14 @@ public class Main extends JavaPlugin implements Listener {
 
 		plugin = this;
 		log = this.getLogger();
+
+		// Metrics
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {
+			// Failed to submit the stats
+		}
 
 		// Workaround temporaneo perchè senza cfg
 		getDataFolder().mkdir();
