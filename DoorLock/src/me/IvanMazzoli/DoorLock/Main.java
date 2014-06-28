@@ -10,6 +10,7 @@ import me.IvanMazzoli.DoorLock.Events.InventoryClose;
 import me.IvanMazzoli.DoorLock.Events.InventoryDrag;
 import me.IvanMazzoli.DoorLock.Events.InventoryMoveItem;
 import me.IvanMazzoli.DoorLock.Events.ItemSpawn;
+import me.IvanMazzoli.DoorLock.Events.PlayerInteract;
 import me.IvanMazzoli.DoorLock.Util.YamlUtils;
 
 import org.bukkit.Bukkit;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin implements Listener {
 		pm.registerEvents(new InventoryDrag(), this);
 		pm.registerEvents(new InventoryMoveItem(), this);
 		pm.registerEvents(new ItemSpawn(), this);
+		pm.registerEvents(new PlayerInteract(), this);
 		pm.registerEvents(this, this);
 
 		CommandManager commandManager = new CommandManager();
