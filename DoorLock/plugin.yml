@@ -1,9 +1,14 @@
 name: DoorLock
 main: me.IvanMazzoli.DoorLock.Main
-version: 1.0
+version: 1.1
 author: IvanMazzoli
 description: Lock your doors with a password made of items!
 
 commands:
   doorlock:
     description: DoorLock commands list
+    
+permissions:
+  doorlock.admin:
+    description: Gives you full control of the plugin
+    default: op

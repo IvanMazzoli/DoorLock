@@ -3,6 +3,7 @@ package me.IvanMazzoli.DoorLock;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import me.IvanMazzoli.DoorLock.Commands.Admin;
 import me.IvanMazzoli.DoorLock.Commands.ChangePassword;
 import me.IvanMazzoli.DoorLock.Commands.Create;
 import me.IvanMazzoli.DoorLock.Commands.Delete;
@@ -21,7 +22,7 @@ public class CommandManager implements CommandExecutor {
 	private Logger log;
 
 	public void setup() {
-		log = Main.log;
+		commands.add(new Admin());
 		commands.add(new ChangePassword());
 		commands.add(new Create());
 		commands.add(new Delete());
@@ -43,14 +44,41 @@ public class CommandManager implements CommandExecutor {
 
 			if (args.length == 0) {
 
+				ArrayList<DoorLockCommand> adminCommands = new ArrayList<DoorLockCommand>();
+
 				player.sendMessage(ChatColor.GREEN
 						+ "===== DoorLock command list:");
 
-				for (DoorLockCommand doorLockCommand : commands)
+				for (DoorLockCommand doorLockCommand : commands) {
 
-					player.sendMessage(ChatColor.GOLD + "/doorlock "
-							+ doorLockCommand.getClass().getSimpleName().toLowerCase()
-							+ " - " + doorLockCommand.getDescription());
+					if (doorLockCommand.getDescription().contains("§")) {
+						adminCommands.add(doorLockCommand);
+					} else {
+						player.sendMessage(ChatColor.GOLD
+								+ "/doorlock "
+								+ doorLockCommand.getClass().getSimpleName()
+										.toLowerCase() + " - "
+								+ doorLockCommand.getDescription());
+					}
+				}
+
+				if (adminCommands.size() != 0) {
+
+					player.sendMessage(ChatColor.RED
+							+ "===== DoorLock Admin commands:");
+
+					for (DoorLockCommand doorLockCommand : adminCommands) {
+
+						player.sendMessage(ChatColor.GOLD
+								+ "/doorlock "
+								+ doorLockCommand.getClass().getSimpleName()
+										.toLowerCase()
+								+ " - "
+								+ doorLockCommand.getDescription().replaceAll(
+										"§", ""));
+					}
+
+				}
 
 				return true;
 			}

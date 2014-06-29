@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 public class WorldUtils {
 
+	public static ArrayList<Player> adminMode = new ArrayList<Player>();
 	public static ArrayList<Lock> lockList = new ArrayList<Lock>();
 	public static HashMap<Player, Lock> justUsedLock = new HashMap<Player, Lock>();
 

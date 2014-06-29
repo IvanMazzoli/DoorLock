@@ -33,8 +33,18 @@ public class BlockBreak implements Listener {
 			return;
 
 		Lock lock = YamlUtils.load(block.getLocation());
-		
-		if (!lock.getOwner().equals(player.getUniqueId())) {
+
+		if (!lock.getOwner().equals(player.getUniqueId())
+				&& !player.hasPermission("doorlock.admin")) {
+			player.sendMessage(ChatColor.RED + "You don't own this lock!");
+			event.setCancelled(true);
+			return;
+		}
+
+		if (player.hasPermission("doorlock.admin")
+				&& !WorldUtils.adminMode.contains(player)) {
+			player.sendMessage(ChatColor.RED
+					+ "You must be in admin mode to delete Locks owned by other players!");
 			event.setCancelled(true);
 			return;
 		}
@@ -43,15 +53,19 @@ public class BlockBreak implements Listener {
 			Bukkit.dispatchCommand(player, "doorlock delete");
 		} else {
 			event.setCancelled(true);
+			String owner = player.hasPermission("doorlock.admin") ? Bukkit
+					.getOfflinePlayer(lock.getOwner()).getName() : "you";
 			player.sendMessage(ChatColor.GOLD
-					+ "This dropper is a lock created by you. Break it again to destroy it.");
+					+ "This dropper is a lock created by " + owner
+					+ ". Break it again to destroy it.");
 			todestroy.add(player);
-			Bukkit.getScheduler().runTaskLater(Main.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					todestroy.remove(player);
-				}
-			}, 60);
+			Bukkit.getScheduler().runTaskLater(Main.getPlugin(),
+					new Runnable() {
+						@Override
+						public void run() {
+							todestroy.remove(player);
+						}
+					}, 60);
 		}
 	}
 }

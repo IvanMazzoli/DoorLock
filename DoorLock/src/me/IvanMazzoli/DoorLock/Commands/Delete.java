@@ -7,6 +7,7 @@ import me.IvanMazzoli.DoorLock.Main;
 import me.IvanMazzoli.DoorLock.Util.WorldUtils;
 import me.IvanMazzoli.DoorLock.Util.YamlUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,26 +43,39 @@ public class Delete extends DoorLockCommand {
 
 		Lock lock = YamlUtils.load(location);
 
-		if (!lock.getOwner().equals(player.getUniqueId())) {
+		if (!lock.getOwner().equals(player.getUniqueId())
+				&& !player.hasPermission("doorlock.admin")) {
 			player.sendMessage(ChatColor.RED + "You don't own this lock!");
 			return;
 		}
 
+		if (player.hasPermission("doorlock.admin")
+				&& !WorldUtils.adminMode.contains(player)) {
+			player.sendMessage(ChatColor.RED
+					+ "You must be in admin mode to delete Locks owned by other players!");
+			return;
+		}
+
 		Iterator<Lock> iterator = WorldUtils.lockList.iterator();
-		
-		while(iterator.hasNext()) {
-			
+
+		while (iterator.hasNext()) {
+
 			Lock inList = iterator.next();
-			
+
 			if (lock.getLocation().equals(inList.getLocation()))
-				iterator.remove();;
+				iterator.remove();
+			;
 		}
 
 		Main.log.info("" + WorldUtils.lockList.size());
 
 		YamlUtils.delete(lock);
 
-		player.sendMessage(ChatColor.GREEN + "Lock deleted successfully!");
+		String owned = player.hasPermission("doorlock.admin") ? " owned by "
+				+ Bukkit.getOfflinePlayer(lock.getOwner()).getName() : null;
+				
+		player.sendMessage(ChatColor.GREEN + "Lock" + owned
+				+ " deleted successfully!");
 	}
 
 }

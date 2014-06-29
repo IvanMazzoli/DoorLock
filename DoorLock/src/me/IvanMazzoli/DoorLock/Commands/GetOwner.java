@@ -15,12 +15,18 @@ import org.bukkit.entity.Player;
 public class GetOwner extends DoorLockCommand {
 
 	public GetOwner() {
-		super("Gets the owner of a lock");
+		super("§Gets the owner of a lock");
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(Player player, String[] args) {
+
+		if (!player.hasPermission("doorlock.admin")) {
+			player.sendMessage(ChatColor.RED
+					+ "You don't have permission to run this command!");
+			return;
+		}
 
 		Block block = player.getTargetBlock(null, 5);
 
@@ -43,7 +49,7 @@ public class GetOwner extends DoorLockCommand {
 		String[] info = { "- Lock info:",
 				"Owner: " + Bukkit.getOfflinePlayer(lock.getOwner()).getName(),
 				"Owner UUID: " + lock.getOwner() };
-		
+
 		for (String string : info)
 			player.sendMessage(ChatColor.GREEN + string);
 	}
