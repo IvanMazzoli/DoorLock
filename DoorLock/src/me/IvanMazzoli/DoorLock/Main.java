@@ -12,6 +12,7 @@ import me.IvanMazzoli.DoorLock.Events.InventoryDrag;
 import me.IvanMazzoli.DoorLock.Events.InventoryMoveItem;
 import me.IvanMazzoli.DoorLock.Events.ItemSpawn;
 import me.IvanMazzoli.DoorLock.Events.PlayerInteract;
+import me.IvanMazzoli.DoorLock.Util.WorldUtils;
 import me.IvanMazzoli.DoorLock.Util.YamlUtils;
 
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -34,14 +36,6 @@ public class Main extends JavaPlugin implements Listener {
 
 		plugin = this;
 		log = this.getLogger();
-
-		// Metrics
-		try {
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-		} catch (IOException e) {
-			// Failed to submit the stats
-		}
 
 		// Workaround temporaneo perchè senza cfg
 		getDataFolder().mkdir();
@@ -63,8 +57,31 @@ public class Main extends JavaPlugin implements Listener {
 		CommandManager commandManager = new CommandManager();
 		commandManager.setup();
 		getCommand("doorlock").setExecutor(commandManager);
+		
+		try {
+			inizializeMetrics();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		log.info("DoorLock enabled!");
+	}
+
+	private void inizializeMetrics() throws IOException {
+		Metrics metrics = new Metrics(this);
+
+	    Graph lockQuantityGraph = metrics.createGraph("Total number of locks");
+
+	    lockQuantityGraph.addPlotter(new Metrics.Plotter("Locks") {
+
+	            @Override
+	            public int getValue() {
+	                    return WorldUtils.lockList.size();
+	            }
+
+	    });
+	    
+		metrics.start();
 	}
 
 	@Override
