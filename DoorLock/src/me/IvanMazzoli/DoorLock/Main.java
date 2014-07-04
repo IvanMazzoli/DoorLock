@@ -1,5 +1,6 @@
 package me.IvanMazzoli.DoorLock;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -14,6 +15,7 @@ import me.IvanMazzoli.DoorLock.Events.ItemSpawn;
 import me.IvanMazzoli.DoorLock.Events.PlayerInteract;
 import me.IvanMazzoli.DoorLock.Util.WorldUtils;
 import me.IvanMazzoli.DoorLock.Util.YamlUtils;
+import net.gravitydevelopment.updater.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,9 +38,15 @@ public class Main extends JavaPlugin implements Listener {
 
 		plugin = this;
 		log = this.getLogger();
+		config = getConfig();
 
-		// Workaround temporaneo perchè senza cfg
-		getDataFolder().mkdir();
+		// Config stuff
+		if (!new File(this.getDataFolder().getPath() + File.separatorChar
+				+ "config.yml").exists())
+			saveDefaultConfig();
+
+		// Checks for Updates
+		checkUpdates();
 
 		YamlUtils.importLocks();
 
@@ -57,7 +65,7 @@ public class Main extends JavaPlugin implements Listener {
 		CommandManager commandManager = new CommandManager();
 		commandManager.setup();
 		getCommand("doorlock").setExecutor(commandManager);
-		
+
 		try {
 			inizializeMetrics();
 		} catch (IOException e) {
@@ -67,20 +75,31 @@ public class Main extends JavaPlugin implements Listener {
 		log.info("DoorLock enabled!");
 	}
 
+	private void checkUpdates() {
+
+		if (!config.getBoolean("Updater.Check for updates"))
+			return;
+
+		Updater.UpdateType updateType = config.getBoolean("Updater.Auto-update") ? Updater.UpdateType.DEFAULT
+				: Updater.UpdateType.NO_DOWNLOAD;
+
+		new Updater(this, 81834, this.getFile(), updateType, true);
+	}
+
 	private void inizializeMetrics() throws IOException {
 		Metrics metrics = new Metrics(this);
 
-	    Graph lockQuantityGraph = metrics.createGraph("Total number of locks");
+		Graph lockQuantityGraph = metrics.createGraph("Total number of locks");
 
-	    lockQuantityGraph.addPlotter(new Metrics.Plotter("Locks") {
+		lockQuantityGraph.addPlotter(new Metrics.Plotter("Locks") {
 
-	            @Override
-	            public int getValue() {
-	                    return WorldUtils.lockList.size();
-	            }
+			@Override
+			public int getValue() {
+				return WorldUtils.lockList.size();
+			}
 
-	    });
-	    
+		});
+
 		metrics.start();
 	}
 
