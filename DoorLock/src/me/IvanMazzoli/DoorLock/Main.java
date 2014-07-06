@@ -2,6 +2,7 @@ package me.IvanMazzoli.DoorLock;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.logging.Logger;
 
 import me.IvanMazzoli.DoorLock.Events.BlockBreak;
@@ -19,6 +20,7 @@ import net.gravitydevelopment.updater.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -65,6 +67,10 @@ public class Main extends JavaPlugin implements Listener {
 		CommandManager commandManager = new CommandManager();
 		commandManager.setup();
 		getCommand("doorlock").setExecutor(commandManager);
+		
+		registerNewEnchantment();
+
+		WorldUtils.setupRecipes();
 
 		try {
 			inizializeMetrics();
@@ -80,7 +86,8 @@ public class Main extends JavaPlugin implements Listener {
 		if (!config.getBoolean("Updater.Check for updates"))
 			return;
 
-		Updater.UpdateType updateType = config.getBoolean("Updater.Auto-update") ? Updater.UpdateType.DEFAULT
+		Updater.UpdateType updateType = config
+				.getBoolean("Updater.Auto-update") ? Updater.UpdateType.DEFAULT
 				: Updater.UpdateType.NO_DOWNLOAD;
 
 		new Updater(this, 81834, this.getFile(), updateType, true);
@@ -101,6 +108,22 @@ public class Main extends JavaPlugin implements Listener {
 		});
 
 		metrics.start();
+	}
+
+	public static boolean registerNewEnchantment() {
+		try {
+			Field f = Enchantment.class.getDeclaredField("acceptingNew");
+			f.setAccessible(true);
+			f.set(null, true);
+			try {
+				Enchantment.registerEnchantment(WorldUtils.glow);
+				return true;
+			} catch (IllegalArgumentException e) {
+
+			}
+		} catch (Exception e) {
+		}
+		return false;
 	}
 
 	@Override
